@@ -1,0 +1,11 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    @model ErrorModel
+    ViewData["Title"] = "Ошибка";
+}
+
+<h1 class="text-danger">Произошла ошибка</h1>
+<h1 class="text-danger">@Model.ErrorTitle</h1>
+<h1 class="text-danger">@Model.ErrorBody</h1>

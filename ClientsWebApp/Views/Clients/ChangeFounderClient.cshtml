@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "База клиентов - Редактирования клиента";
+    @model EditClientModel
+    @using ClientsWebApp.Controllers
+}
+
+<h1>Изменить <strong>Клиента</strong></h1>
+<div>
+    <form style="margin-bottom:50px;" asp-action="@nameof(ClientsController.ChangeFounderClient)">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Client.INN" class="control-label"></label>
+            <input asp-for="Client.INN" name="INN" class="form-control" />
+            <span asp-validation-for="Client.INN" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Client.ClientName" class="control-label"></label>
+            <input asp-for="Client.ClientName" name="Client.ClientName" class="form-control" />
+            <span asp-validation-for="Client.ClientName" class="text-danger"></span>
+        </div>
+
+        <input type="hidden" asp-for="Client.Id" />
+        <input type="submit" class="btn btn-primary" value="Сохранить изменения" />
+    </form>
+    <a class="btn btn-dark" style="display:inline-block; margin-right:50px;" asp-area="" asp-controller="Clients" asp-action="@nameof(ClientsController.Index)">Назад</a>
+    <a class="btn btn-dark" style="color:white" onclick="ShowRelations()">Показать связаных учредителей </a>
+
+    <form asp-action="@nameof(ClientsController.DeleteClient)" style="display: inline-block; margin-left: 50px">
+        <input type="submit" value="Удалить" asp-action="@nameof(ClientsController.DeleteClient)" asp-route-id="@(Model.Client.Id)" class="btn btn-danger" />
+    </form>
+</div>
+
+<div id="relTable" hidden>
+    <h2>Связаные учредители</h2>
+    <table class="table-bordered">
+        <tr>
+            <td width="150">ИНН</td>
+            <td width="300">ФИО</td>
+        </tr>
+        @foreach (var item in Model.Founders)
+        {
+            <tr>
+                <td width="150">@item.INN</td>
+                <td width="300">@item.NameSurname</td>
+            </tr>
+        }
+    </table>
+</div>
+
+

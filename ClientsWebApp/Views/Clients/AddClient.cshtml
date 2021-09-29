@@ -1,0 +1,172 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    @model AddClientModel
+    ViewData["Title"] = "База клиентов - Добавить нового клиента";
+    @using ClientsWebApp.Controllers
+    //if (Model.ExistingFounders == null) Model.ExistingFounders = Model.Founders;
+    //Model.ExistingFounders = Model.ExistingFounders.OrderBy(n => n.NameSurname).ToList();
+}
+
+
+<div class="brd col-md-8">
+    <h1 class="text-center">Добавление нового клиента</h1>
+
+    <h2>Клиент</h2>
+    <form asp-action="@(nameof(ClientsController.AddClient))">
+        <div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Client.INN" class="control-label"></label>
+                <input id="clInn" asp-for="Client.INN" class="form-control" />
+                <span asp-validation-for="Client.INN" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Client.ClientName" class="control-label"></label>
+                <input id="clName" asp-for="Client.ClientName" class="form-control" />
+                <span asp-validation-for="Client.ClientName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Client.Type" class="control-label"></label>
+                <input asp-for="Client.Type" type="radio" value="false" class="custom-radio" checked onchange="ShowFoundersCount()"> ИП
+                <input asp-for="Client.Type" type="radio" value="true" class="custom-radio" onchange="ShowFoundersCount()"> ЮЛ
+            </div>
+
+            <br /><br /><br />
+        </div>
+
+        <h2>Учредитель (учредители)</h2>
+        <div id="fCount" @(Model.Client != null && Model.Client.Type == true ? "" : "hidden")>
+            <label>Количество учредителей (1-10)</label><br />
+            <input id="foundersCount" type="number" max="10" min="1" name="foundersCount"
+                   value="@(Model.Founders != null && Model.Founders.Count > 0 ? Model.Founders.Count : 1)" onchange="AddFields()" /> <br /><br />
+        </div>
+
+        <div id="founders">
+
+            @if (Model.Founders != null && Model.Founders.Count > 0)
+            {
+                int i = 0;
+                foreach (var founder in Model.Founders)
+                {
+                    <div id="founder[@i]" style="margin-bottom: 70px">
+                        <input type="checkbox" onchange="ShowSelection(@i)" style="margin-left:40px;" />Использовать существующего учредителя<br />
+
+                        <div id="manual[@i]">
+                            <div class="form-group">
+                                <label asp-for="Founders[i].INN" class="control-label"></label>
+                                <input id="f[@i].inn" asp-for="Founders[i].INN" class="form-control" />
+                                <span asp-validation-for="Founders[i].INN" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Founders[i].NameSurname" class="control-label"></label>
+                                <input id="f[@i].name" asp-for="Founders[i].NameSurname" class="form-control" />
+                                <span asp-validation-for="Founders[i].NameSurname" class="text-danger"></span>
+                            </div>
+
+
+                        </div>
+
+                        <div id="selection[@i]" hidden>
+                            <input type="text" id="selection[@i].useexisting" value="false" name="selection[@i].UseExistingFounder" hidden />
+                            <select name="selection[@i].FounderData">
+                                <option style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
+                                @*@{
+                                        foreach (var founderEx in Model.ExistingFounders)
+                                        {
+                                            <option>@(founderEx.NameSurname)-@(founderEx.INN);@(founderEx.Id)</option>
+                                        }
+                                    }*@
+                            </select><br /><br />
+                        </div>
+                    </div>
+                    i++;
+                }
+            }
+            else
+            {
+                <div id="founder[0]" style="margin-bottom: 70px">
+                    <input type="checkbox" onchange="ShowSelection(0)" style="margin-left:40px;" />Использовать существующего учредителя<br />
+
+                    <div id="manual[0]">
+                        <div class="form-group">
+                            <label class="control-label">ИНН учредителя</label>
+                            <input id="f[0].inn" name="Founders[0].INN" type="text" class="form-control" minlength="12" maxlength="12" required
+                                   data-val="true" data-val-length="Поле ИНН должно содержать 12 символов."
+                                   data-val-length-max="12" data-val-length-min="12" data-val-required="Поле ИНН обязательно для заполнения." />
+                            <span asp-validation-for="Founders[0].INN" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">ФИО</label>
+                            <input id="f[0].name" name="Founders[0].NameSurname" type="text" class="form-control" minlength="5" maxlength="60" required
+                                   data-val="true" data-val-length="Поле ФИО должно сожержать от 5 до 60 символов."
+                                   data-val-length-max="60" data-val-length-min="5" data-val-required="Поле ФИО обязательно для заполнения." />
+                            <span asp-validation-for="Founders[0].NameSurname" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div id="selection[0]" hidden>
+                        <input type="text" id="selection[0].useexisting" value="false" name="selection[0].UseExistingFounder" hidden />
+                        <select name="ExistingFounders[0].FounderData">
+                            @{
+                                <option style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
+                                @*foreach (var founderEx in Model.ExistingFounders)
+                                    {
+                                        <option>@(founderEx.NameSurname)-@(founderEx.INN);@(founderEx.Id)</option>
+                                    }*@
+                            }
+                        </select><br /><br />
+                    </div>
+
+                </div>
+
+            }
+
+
+            @*<div class="form-group">
+                    <label asp-for="Founders[0].INN" class="control-label"></label>
+                    <input id="f[0].inn" asp-for="Founders[0].INN" class="form-control" />
+                    <span asp-validation-for="Founders[0].INN" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Founders[0].NameSurname" class="control-label"></label>
+                    <input id="f[0].name" asp-for="Founders[0].NameSurname" class="form-control" />
+                    <span asp-validation-for="Founders[0].NameSurname" class="text-danger"></span>
+                </div>*@
+
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Добавить нового клиента" />
+    </form>
+
+    <div style="margin-top:40px;">
+        <button class="btn btn-dark" onclick="RandomNewClient()">Рандом</button>
+        <a class="btn btn-dark" style="display:inline-block; margin-right:50px;" asp-area="" asp-controller="Clients" asp-action="@nameof(ClientsController.Index)">Назад</a>
+    </div>
+</div>
+
+
+<select id="selection" hidden>
+    <option style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
+    @{
+        @*foreach (var founder in Model.ExistingFounders)
+            {
+                <option>@(founder.NameSurname)-@(founder.INN);@(founder.Id)</option>
+            }*@
+    }
+</select>
+
+<select asp-for="ExistingFounders" asp-items="Model.ExistingFounders">
+    <option value="">All</option>
+</select>
+
+@*@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
