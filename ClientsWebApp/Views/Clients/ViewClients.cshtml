@@ -1,0 +1,71 @@
+﻿@{
+    @model ViewClientsModel
+    ViewData["Title"] = "База данных клиентов";
+    @using ClientsWebApp.Controllers
+}
+
+<div>
+    <form asp-controller="Clients" asp-action="@nameof(ClientsController.ViewClients)" method="get">
+        <p style="display: inline-block; margin-right: 15px;">ИНН: <input type="text" asp-for="Search.ClientINN" /></p>
+        <p style="display: inline-block; margin-right: 15px;">Наименование: <input type="text" asp-for="Search.ClientName" /></p>
+        <p style="display: inline-block; margin-right: 15px;">
+            Тип:
+            <select class="custom-select-sm" asp-for="Search.ClientType" asp-items="Model.Types">
+                <option></option>
+            </select>
+        </p>
+        <select class="custom-select-sm" asp-for="Count" asp-items="Model.CountVars"></select>
+        <input type="submit" class="btn btn-primary" style="margin-left: 15px" value="Применить фильтр" />
+    </form>
+
+    <br />
+
+    <table class="table-bordered">
+        <tr>
+            <td width="30">@Html.DisplayNameFor(model => model.Clients[0].Id)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Clients[0].INN)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Clients[0].ClientName)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Clients[0].Type)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Clients[0].AddDate)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Clients[0].UpdateDate)</td>
+        </tr>
+        @foreach (Client ct in Model.Clients)
+        {
+            <tr>
+                <td>@ct.Id</td>
+                <td>@ct.INN</td>
+                <td>@ct.ClientName</td>
+                <td>@(ct.Type ? "ЮЛ" : "ИП")</td>
+                <td>@ct.AddDate.ToString("[HH:mm] (yyyy.MM.dd)")</td>
+                <td>@ct.UpdateDate.ToString("[HH:mm] (yyyy.MM.dd)")</td>
+                <td> <a class="btn btn-dark" asp-action="@nameof(ClientsController.ChangeClient)" asp-route-id="@ct.Id">Редактирование</a>  </td>
+            </tr>
+        }
+    </table>
+
+    <br />
+    <div style="display: flex; justify-content: center;">
+        @{
+            if (Model.Page - 1 > 0)
+            {
+                <a class="btn btn-outline-secondary" style="display: inline-block; margin-right: 30px" asp-controller="Clients" 
+                   asp-route-page="@(Model.Page-1)"
+                   asp-route-count="@(Model.Count)"
+                   asp-route-Search.ClientName="@(Model.Search == null ? "" : Model.Search.ClientName)"
+                   asp-route-Search.ClientINN="@(Model.Search == null ? "" : Model.Search.ClientINN)"
+                   asp-route-Search.ClientType="@(Model.Search == null ? "" : Model.Search.ClientType)"
+                   asp-action="@nameof(ClientsController.ViewClients)">Предыдущая страница</a>
+            }
+            if (Model.Page + 1 <= Model.Pages)
+            {
+                <a class="btn btn-outline-secondary" style="display: inline-block; margin-left: 30px" asp-controller="Clients" 
+                   asp-route-page="@(Model.Page + 1)"
+                   asp-route-count="@(Model.Count)"
+                   asp-route-Search.ClientName="@(Model.Search == null ? "" : Model.Search.ClientName)"
+                   asp-route-Search.ClientINN="@(Model.Search == null ? "" : Model.Search.ClientINN)"
+                   asp-route-Search.ClientType="@(Model.Search == null ? "" : Model.Search.ClientType)"
+                   asp-action="@nameof(ClientsController.ViewClients)">Следующая страница</a>
+            }
+        }
+    </div>
+</div>

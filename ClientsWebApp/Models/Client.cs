@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace ClientsWebApp.Models
 {
+    [Index(nameof(INN))]
+    [Index(nameof(ClientName))]
     public class Client
     {
         public int Id { get; set; }
@@ -23,6 +27,8 @@ namespace ClientsWebApp.Models
         public DateTime AddDate { get; set; }
         [DataType(DataType.DateTime), Display(Name = "Дата последнего обновления")]
         public DateTime UpdateDate { get; set; }
+
+        public virtual ICollection<Founder> Founders { get; set; }
 
         public Client() 
         {

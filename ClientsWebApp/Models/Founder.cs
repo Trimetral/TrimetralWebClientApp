@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace ClientsWebApp.Models
 {
+    [Index(nameof(INN))]
+    [Index(nameof(NameSurname))]
     public class Founder
     {
         public int Id { get; set; }
@@ -19,6 +23,8 @@ namespace ClientsWebApp.Models
         [DataType(DataType.DateTime), Display(Name = "Дата последнего обновления")]
         public DateTime UpdateDate { get; set; }
 
+        public virtual ICollection<Client> Clients { get; set; }
+
         public Founder() { }
 
         public Founder(string data)
@@ -26,7 +32,7 @@ namespace ClientsWebApp.Models
             NameSurname = data;
         }
 
-        public override string ToString() => $"{NameSurname}-{INN}:{Id}";
+        public override string ToString() => $"{NameSurname}:{INN}:{Id}";
 
     }
 }

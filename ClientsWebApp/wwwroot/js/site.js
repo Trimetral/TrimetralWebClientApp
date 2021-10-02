@@ -41,24 +41,32 @@ function RandomNewClient() {
 function ShowFoundersCount() {
     if (document.getElementById("Client_Type").checked === true) {
         document.getElementById("fCount").hidden = true
+        AddFields(1)
     }
     else {
-        ClearContainer("founders")
-        AddForm("founders", 0)
+        AddFields()
         document.getElementById("fCount").hidden = false
     }
 }
 
-function AddFields() {
-    var number = document.getElementById("foundersCount").value;
-    if (number < 1 || number > 10) {
-        alert('От 1 до 10')
-        return
-    }
+function AddFields(num) {
+    if (num === undefined) {
+        var number = document.getElementById("foundersCount").value;
+        if (number < 1 || number > 10) {
+            alert('От 1 до 10')
+            return
+        }
 
-    ClearContainer("founders")
-    for (i = 0; i < number; i++) {
-        AddForm("founders", i)
+        ClearContainer("founders")
+        for (i = 0; i < number; i++) {
+            AddForm("founders", i)
+        }
+    }
+    else {
+        ClearContainer("founders")
+        for (i = 0; i < num; i++) {
+            AddForm("founders", i)
+        }
     }
 }
 
@@ -70,35 +78,49 @@ function ClearContainer(name) {
 }
 
 function AddForm(name, num) {
-    var mainContainer = document.getElementById(name);
-    var inputContainer = document.createElement("div")
+    var mainContainer = document.getElementById(name);          //основной контейнер учредителей
+    var inputContainer = document.createElement("div")          //контейнер учредителя для добавления клиенту
     inputContainer.id = "founder[" + num + "]"
     inputContainer.style = "margin-bottom: 70px"
     mainContainer.appendChild(inputContainer)
 
-    var checkBox = document.createElement("input")
+    var checkBox = document.createElement("input")              //флаг выбора существующих учредителей
     checkBox.type = "checkbox"
-    checkBox.id = "check[" + num + "]"
+    checkBox.id = "f[" + num + "].useExisting"
     checkBox.setAttribute("onclick", "ShowSelection(" + num + ");");
     checkBox.style = "margin-left: 40px;"
     inputContainer.appendChild(checkBox)
     inputContainer.append("Использовать существующего учредителя")
 
-    var container = document.createElement("div")
+    var selectContainer = document.createElement("div")         //контейнер выбора существующих
+    selectContainer.id = "selection[" + num + "]"
+    selectContainer.hidden = true
+    inputContainer.appendChild(selectContainer)
+
+    var selection = document.getElementById("selection")        //выбор существующих учредителей
+    var s_selection = selection.cloneNode(true)
+    s_selection.hidden = false
+    s_selection.name = "selection[" + num + "].ExistingFounders"
+    s_selection.id = "selection[" + num + "].ExistingFounders"
+    s_selection.setAttribute("onchange", "UseSelectedItem(" + num + ");");
+    s_selection.setAttribute("multiple", "multiple");
+    selectContainer.appendChild(s_selection)
+
+    var container = document.createElement("div")               //контейнер данных (ФИО, ИНН) учредителя
     container.id = "manual[" + num + "]"
     inputContainer.appendChild(container)
 
-    var formGroupInn = document.createElement("div")
+    var formGroupInn = document.createElement("div")            //контейнер для ИНН
     formGroupInn.classList = "form-group"
     container.appendChild(formGroupInn)
 
-    var labelInn = document.createElement("label")
+    var labelInn = document.createElement("label")              //лейбл ИНН
     labelInn.textContent = "ИНН Учредителя"
     labelInn.classList = "control-label"
     labelInn.for ="Founders_" + num + "__INN"
     formGroupInn.appendChild(labelInn)
 
-    var inputInn = document.createElement("input");
+    var inputInn = document.createElement("input");             //ввод ИНН
     inputInn.type = "text";
     inputInn.name = "Founders[" + num + "].INN"
     inputInn.id = "f[" + num + "].inn"
@@ -107,29 +129,30 @@ function AddForm(name, num) {
     inputInn.required = true
     inputInn.classList = "form-control"
     inputInn.setAttribute("data-val", "true")
-    inputInn.setAttribute("data-val-length", "The field ИНН must be a string with a length 12.")
+    inputInn.setAttribute("data-val-length", "Поле ИНН должно содержать 12 символов.")
     inputInn.setAttribute("data-val-length-max", "12")
     inputInn.setAttribute("data-val-length-min", "12")
-    inputInn.setAttribute("data-val-required", "The ИНН field is required.")
+    inputInn.setAttribute("data-val-required", "Поле ИНН обязательно.")
+    inputInn.setAttribute("onchange", "ShowSelection(" + num + ", true)")
     formGroupInn.appendChild(inputInn);
 
-    var spanInn = document.createElement("span")
+    var spanInn = document.createElement("span")                //для ошибки валидации ИНН
     spanInn.className = 'text-danger field-validation-valid'
     spanInn.setAttribute("data-valmsg-for", "Founders[" + num + "].INN")
     spanInn.setAttribute("data-valmsg-replace", "true")
     formGroupInn.appendChild(spanInn);
 
-    var formGroupName = document.createElement("div")
+    var formGroupName = document.createElement("div")           //контейнер ФИО
     formGroupName.classList = "form-group"
     container.appendChild(formGroupName)
 
-    var labelName = document.createElement("label")
+    var labelName = document.createElement("label")             //лейбл ФИО
     labelName.textContent = "ФИО"
     labelName.classList = "control-label"
     labelName.for = "Founders_" + num + "__NameSurname"
     formGroupName.appendChild(labelName)
 
-    var inputName = document.createElement("input");
+    var inputName = document.createElement("input");            //ввод ФИО
     inputName.type = "text";
     inputName.name = "founders[" + num + "].namesurname"
     inputName.id = "f[" + num + "].name"
@@ -139,36 +162,25 @@ function AddForm(name, num) {
     inputName.required = true
     inputName.classList = "form-control"
     inputName.setAttribute("data-val", "true")
-    inputName.setAttribute("data-val-length", "The field ФИО must be a string with a minimum length of 5 and a maximum length of 60.")
+    inputName.setAttribute("data-val-length", "Поле ФИО должно содержать от 5 до 60 символов.")
     inputName.setAttribute("data-val-length-max", "60")
     inputName.setAttribute("data-val-length-min", "5")
-    inputName.setAttribute("data-val-required", "The ФИО field is required.")
+    inputName.setAttribute("data-val-required", "Поле ФИО обязательно.")
+    inputName.setAttribute("onchange", "ShowSelection(" + num + ", true)")
     formGroupName.appendChild(inputName);
 
-    var spanName = document.createElement("span")
+    var spanName = document.createElement("span")               //для ошибки валидации ФИО
     spanName.className = 'text-danger field-validation-valid'
     spanName.setAttribute("data-valmsg-for", "Founders[" + num + "].NameSurname")
     spanName.setAttribute("data-valmsg-replace", "true")
     formGroupName.appendChild(spanName);
 
-    var selectContainer = document.createElement("div")
-    selectContainer.id = "selection[" + num + "]"
-    selectContainer.hidden = true
-    inputContainer.appendChild(selectContainer)
-
-    var useSelected = document.createElement("input")
-    useSelected.type = "text";
-    useSelected.name = "selection[" + num + "].UseExistingFounder"
-    useSelected.id = "selection[" + num + "].useexisting"
-    useSelected.value = "false"
-    useSelected.hidden = true
-    selectContainer.appendChild(useSelected)
-
-    var selection = document.getElementById("selection")
-    var s_selection = selection.cloneNode(true)
-    s_selection.hidden = false
-    s_selection.name = "selection[" + num + "].FounderData"
-    selectContainer.appendChild(s_selection)
+    var inputId = document.createElement("input");            //скрытый ID
+    inputId.type = "hidden";
+    inputId.disabled = true
+    inputId.name = "Founders[" + num + "].Id"
+    inputId.id = "f[" + num + "].Id"
+    container.appendChild(inputId);
 }
 
 function AppendBr(container, num) {
@@ -177,12 +189,26 @@ function AppendBr(container, num) {
     }
 }
 
-function ShowSelection(num) {
-    document.getElementById("selection[" + num + "]").hidden = !document.getElementById("selection[" + num + "]").hidden
-    document.getElementById("manual[" + num + "]").hidden = !document.getElementById("manual[" + num + "]").hidden
-    document.getElementById("selection[" + num + "].useexisting").value = !document.getElementById("selection[" + num + "]").hidden
-    document.getElementById("f[" + num + "].inn").required = !document.getElementById("f[" + num + "].inn").required
-    document.getElementById("f[" + num + "].inn").minLength = 10 * document.getElementById("f[" + num + "].inn").required
-    document.getElementById("f[" + num + "].name").required = !document.getElementById("f[" + num + "].name").required
-    document.getElementById("f[" + num + "].name").minLength = 10 * document.getElementById("f[" + num + "].name").required
+function ShowSelection(num, hide) {
+    if (hide === undefined) {
+        document.getElementById("selection[" + num + "]").hidden = !document.getElementById("selection[" + num + "]").hidden
+        document.getElementById("f[" + num + "].inn").value = ""
+        document.getElementById("f[" + num + "].name").value = ""
+        document.getElementById("f[" + num + "].Id").value = ""
+        document.getElementById("f[" + num + "].Id").disabled = false
+    }
+    else {
+        if (document.getElementById("f[" + num + "].useExisting").checked === true) {
+            document.getElementById("f[" + num + "].useExisting").checked = false
+            document.getElementById("f[" + num + "].Id").disabled = true
+            ShowSelection(num)
+        }
+    }
+}
+
+function UseSelectedItem(num) {
+    var founder = document.getElementById("selection[" + num + "].ExistingFounders").value.split(":")
+    document.getElementById("f[" + num + "].inn").value = founder[1]
+    document.getElementById("f[" + num + "].name").value = founder[0]
+    document.getElementById("f[" + num + "].Id").value = founder[2]
 }

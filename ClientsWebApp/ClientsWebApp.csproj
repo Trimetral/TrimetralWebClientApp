@@ -5,16 +5,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210927155857_InitialMigration.cs" />
+    <Compile Remove="Migrations\20210927155857_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210927160321_Migration_1.cs" />
+    <Compile Remove="Migrations\20210927160321_Migration_1.Designer.cs" />
     <Compile Remove="Migrations\20210927160805_Migration_2.cs" />
     <Compile Remove="Migrations\20210927160805_Migration_2.Designer.cs" />
     <Compile Remove="Migrations\20210927160953_Migration_2.cs" />
     <Compile Remove="Migrations\20210927160953_Migration_2.Designer.cs" />
+    <Compile Remove="Migrations\20210927161635_Migration_2.cs" />
+    <Compile Remove="Migrations\20210927161635_Migration_2.Designer.cs" />
+    <Compile Remove="Migrations\20210927235625_migration_3.cs" />
+    <Compile Remove="Migrations\20210927235625_migration_3.Designer.cs" />
+    <Compile Remove="Migrations\20210929123729_NameChange.cs" />
+    <Compile Remove="Migrations\20210929123729_NameChange.Designer.cs" />
+    <Compile Remove="Migrations\20210929124035_NameChange2.cs" />
+    <Compile Remove="Migrations\20210929124035_NameChange2.Designer.cs" />
+    <Compile Remove="Migrations\20210929133846_ClientRename.cs" />
+    <Compile Remove="Migrations\20210929133846_ClientRename.Designer.cs" />
+    <Compile Remove="Migrations\20210929201623_StartingM2M.cs" />
+    <Compile Remove="Migrations\20210929201623_StartingM2M.Designer.cs" />
+    <Compile Remove="Migrations\20210929204918_M2M_at2.cs" />
+    <Compile Remove="Migrations\20210929204918_M2M_at2.Designer.cs" />
+    <Compile Remove="Migrations\20211002210205_M2M_at3.cs" />
+    <Compile Remove="Migrations\20211002210205_M2M_at3.Designer.cs" />
+    <Compile Remove="Migrations\20211002210902_m2m_at2.cs" />
+    <Compile Remove="Migrations\20211002210902_m2m_at2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.18" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.18" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.18">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

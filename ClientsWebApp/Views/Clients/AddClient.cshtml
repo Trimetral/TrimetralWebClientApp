@@ -54,36 +54,31 @@
                 foreach (var founder in Model.Founders)
                 {
                     <div id="founder[@i]" style="margin-bottom: 70px">
-                        <input type="checkbox" onchange="ShowSelection(@i)" style="margin-left:40px;" />Использовать существующего учредителя<br />
+                        <input type="checkbox" id="f[@i].useExisting" onchange="ShowSelection(@i)" style="margin-left:40px;" />Использовать существующего учредителя<br />
+
+                        <div id="selection[@i]" hidden>
+                            <select name="selection[@i].ExistingFounders" asp-for="ExistingFounders" asp-items="Model.ExistingFounders">
+                                <option value="" style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
+                            </select>
+                            <br /><br />
+                        </div>
 
                         <div id="manual[@i]">
                             <div class="form-group">
                                 <label asp-for="Founders[i].INN" class="control-label"></label>
-                                <input id="f[@i].inn" asp-for="Founders[i].INN" class="form-control" />
+                                <input id="f[@i].inn" asp-for="Founders[i].INN" class="form-control" onchange="ShowSelection(@i, true)" />
                                 <span asp-validation-for="Founders[i].INN" class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
                                 <label asp-for="Founders[i].NameSurname" class="control-label"></label>
-                                <input id="f[@i].name" asp-for="Founders[i].NameSurname" class="form-control" />
+                                <input id="f[@i].name" asp-for="Founders[i].NameSurname" class="form-control" onchange="ShowSelection(@i, true)" />
                                 <span asp-validation-for="Founders[i].NameSurname" class="text-danger"></span>
                             </div>
 
-
+                            <input type="hidden" name="Founders[@i].Id" id="f[@i].Id" />
                         </div>
 
-                        <div id="selection[@i]" hidden>
-                            <input type="text" id="selection[@i].useexisting" value="false" name="selection[@i].UseExistingFounder" hidden />
-                            <select name="selection[@i].FounderData">
-                                <option style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
-                                @*@{
-                                        foreach (var founderEx in Model.ExistingFounders)
-                                        {
-                                            <option>@(founderEx.NameSurname)-@(founderEx.INN);@(founderEx.Id)</option>
-                                        }
-                                    }*@
-                            </select><br /><br />
-                        </div>
                     </div>
                     i++;
                 }
@@ -91,14 +86,22 @@
             else
             {
                 <div id="founder[0]" style="margin-bottom: 70px">
-                    <input type="checkbox" onchange="ShowSelection(0)" style="margin-left:40px;" />Использовать существующего учредителя<br />
+                    <input type="checkbox" id="f[0].useExisting" onchange="ShowSelection(0)" style="margin-left:40px;" />Использовать существующего учредителя<br />
+
+                    <div id="selection[0]" hidden>
+                        <select name="selection[0].ExistingFounders" id="selection[0].ExistingFounders" asp-for="ExistingFounders" asp-items="Model.ExistingFounders" onchange="UseSelectedItem(0)">
+                            <option value="" style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
+                        </select>
+                        <br /><br />
+                    </div>
 
                     <div id="manual[0]">
                         <div class="form-group">
                             <label class="control-label">ИНН учредителя</label>
                             <input id="f[0].inn" name="Founders[0].INN" type="text" class="form-control" minlength="12" maxlength="12" required
                                    data-val="true" data-val-length="Поле ИНН должно содержать 12 символов."
-                                   data-val-length-max="12" data-val-length-min="12" data-val-required="Поле ИНН обязательно для заполнения." />
+                                   data-val-length-max="12" data-val-length-min="12" data-val-required="Поле ИНН обязательно для заполнения."
+                                   onchange="ShowSelection(0, true)"/>
                             <span asp-validation-for="Founders[0].INN" class="text-danger"></span>
                         </div>
 
@@ -106,41 +109,15 @@
                             <label class="control-label">ФИО</label>
                             <input id="f[0].name" name="Founders[0].NameSurname" type="text" class="form-control" minlength="5" maxlength="60" required
                                    data-val="true" data-val-length="Поле ФИО должно сожержать от 5 до 60 символов."
-                                   data-val-length-max="60" data-val-length-min="5" data-val-required="Поле ФИО обязательно для заполнения." />
+                                   data-val-length-max="60" data-val-length-min="5" data-val-required="Поле ФИО обязательно для заполнения."
+                                   onchange="ShowSelection(0, true)"/>
                             <span asp-validation-for="Founders[0].NameSurname" class="text-danger"></span>
                         </div>
-                    </div>
 
-                    <div id="selection[0]" hidden>
-                        <input type="text" id="selection[0].useexisting" value="false" name="selection[0].UseExistingFounder" hidden />
-                        <select name="ExistingFounders[0].FounderData">
-                            @{
-                                <option style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
-                                @*foreach (var founderEx in Model.ExistingFounders)
-                                    {
-                                        <option>@(founderEx.NameSurname)-@(founderEx.INN);@(founderEx.Id)</option>
-                                    }*@
-                            }
-                        </select><br /><br />
-                    </div>
-
+                        <input type="hidden" disabled name="Founders[0].Id" id="f[0].Id"/>
+                    </div> <br /><br />
                 </div>
-
             }
-
-
-            @*<div class="form-group">
-                    <label asp-for="Founders[0].INN" class="control-label"></label>
-                    <input id="f[0].inn" asp-for="Founders[0].INN" class="form-control" />
-                    <span asp-validation-for="Founders[0].INN" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Founders[0].NameSurname" class="control-label"></label>
-                    <input id="f[0].name" asp-for="Founders[0].NameSurname" class="form-control" />
-                    <span asp-validation-for="Founders[0].NameSurname" class="text-danger"></span>
-                </div>*@
-
         </div>
 
         <input type="submit" class="btn btn-primary" value="Добавить нового клиента" />
@@ -153,20 +130,6 @@
 </div>
 
 
-<select id="selection" hidden>
+<select id="selection" asp-for="ExistingFounders" asp-items="Model.ExistingFounders" hidden>
     <option style="background-color:yellow; color:black;" disabled>Выберите учредителя</option>
-    @{
-        @*foreach (var founder in Model.ExistingFounders)
-            {
-                <option>@(founder.NameSurname)-@(founder.INN);@(founder.Id)</option>
-            }*@
-    }
 </select>
-
-<select asp-for="ExistingFounders" asp-items="Model.ExistingFounders">
-    <option value="">All</option>
-</select>
-
-@*@section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }*@

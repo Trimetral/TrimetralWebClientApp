@@ -11,25 +11,28 @@
 
         <div class="form-group">
             <label asp-for="Client.INN" class="control-label"></label>
-            <input asp-for="Client.INN" class="form-control" />
+            <input asp-for="Client.INN" name="INN" class="form-control" />
             <span asp-validation-for="Client.INN" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Client.ClientName" class="control-label"></label>
-            <input asp-for="Client.ClientName" class="form-control" />
+            <input asp-for="Client.ClientName" name="ClientName" class="form-control" />
             <span asp-validation-for="Client.ClientName" class="text-danger"></span>
         </div>
 
-        <input type="hidden" asp-for="Client.Id" />
+        <div class="form-group">
+            <label asp-for="Client.Type" class="control-label"></label>
+            <input name="Type" value="@(Model.Client.Type ? "ЮЛ" : "ИП")" disabled class="form-control" />
+        </div>
+
+        <input type="hidden" name="Id" asp-for="Client.Id" />
         <input type="submit" class="btn btn-primary" value="Сохранить изменения" />
     </form>
-    <a class="btn btn-dark" style="display:inline-block; margin-right:50px;" asp-area="" asp-controller="Clients" asp-action="@nameof(ClientsController.Index)">Назад</a>
-    <a class="btn btn-dark" style="color:white" onclick="ShowRelations()">Показать связаных учредителей </a>
 
-    <form asp-action="@nameof(ClientsController.DeleteClient)" style="display: inline-block; margin-left: 50px">
-        <input type="submit" value="Удалить" asp-action="@nameof(ClientsController.DeleteClient)" asp-route-id="@(Model.Client.Id)" class="btn btn-danger" />
-    </form>
+    <a class="btn btn-dark" style="display:inline-block; margin-right:50px;" asp-controller="Clients" asp-action="@nameof(ClientsController.ViewClients)">Назад</a>
+    <a class="btn btn-dark" style="color:white" onclick="ShowRelations()">Показать связаных учредителей </a>
+    <a class="btn btn-danger" style="display:inline-block; margin-left:50px;" asp-controller="Clients" asp-action="@nameof(ClientsController.DeleteClient)" asp-route-id="@Model.Client.Id">Удалить</a>
 </div>
 
 <div id="relTable" hidden>
@@ -44,6 +47,7 @@
             <tr>
                 <td width="150">@item.INN</td>
                 <td width="300">@item.NameSurname</td>
+                <td> <a class="btn btn-dark" asp-action="@nameof(ClientsController.ChangeFounder)" asp-route-id="@item.Id">Редактирование</a>  </td>
             </tr>
         }
     </table>

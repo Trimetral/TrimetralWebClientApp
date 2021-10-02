@@ -24,12 +24,10 @@
         <input type="hidden" asp-for="Founder.Id" />
         <input type="submit" class="btn btn-primary" value="Сохранить изменения" />
     </form>
-    <a class="btn btn-dark" style="display:inline-block; margin-right:50px;" asp-area="" asp-controller="Clients" asp-action="@nameof(ClientsController.Index)">Назад</a>
-    <a class="btn btn-dark" style="color:white" onclick="ShowRelations()">Показать связаных ЮЛ</a>
 
-    <form asp-action="DeleteFounder" style="display: inline-block; margin-left: 50px">
-        <input type="submit" value="Удалить" asp-action="@nameof(ClientsController.DeleteFounder)" asp-route-id="@(Model.Founder.Id)" class="btn btn-danger" />
-    </form>
+    <a class="btn btn-dark" style="display:inline-block; margin-right:50px;" asp-controller="Clients" asp-action="@nameof(ClientsController.ViewFounders)">Назад</a>
+    <a class="btn btn-dark" style="color:white" onclick="ShowRelations()">Показать связаных ЮЛ</a>
+    <a class="btn btn-danger" style="display:inline-block; margin-left:50px;" asp-controller="Clients" asp-action="@nameof(ClientsController.DeleteFounder)" asp-route-id="@Model.Founder.Id">Удалить</a>
 </div>
 
 <div id="relTable" hidden>
@@ -37,7 +35,7 @@
     <table class="table-bordered">
         <tr>
             <td width="150">ИНН</td>
-            <td width="300">ФИО</td>
+            <td width="300">Наименование</td>
             <td width="50">Тип</td>
         </tr>
         @foreach (var item in Model.Clients)
@@ -46,6 +44,7 @@
                 <td width="150">@item.INN</td>
                 <td width="300">@item.ClientName</td>
                 <td width="50">@(item.Type ? "ЮЛ" : "ИП")</td>
+                <td> <a class="btn btn-dark" asp-action="@nameof(ClientsController.ChangeClient)" asp-route-id="@item.Id">Редактирование</a>  </td>
             </tr>
         }
     </table>

@@ -1,0 +1,60 @@
+﻿@{
+    @model ViewFoundersModel
+    ViewData["Title"] = "База данных клиентов";
+    @using ClientsWebApp.Controllers
+}
+
+<div>
+    <form asp-controller="Clients" asp-action="@nameof(ClientsController.ViewFounders)" method="get">
+        <p style="display: inline-block; margin-right: 15px;">ИНН: <input type="text" asp-for="Search.FounderINN" /></p>
+        <p style="display: inline-block; margin-right: 15px;">ФИО: <input type="text" asp-for="Search.FounderName" /></p>
+        <select class="custom-select-sm" asp-for="Count" asp-items="Model.CountVars"></select>
+        <input type="submit" class="btn btn-primary" style="margin-left: 15px" value="Применить фильтр" />
+    </form>
+    <br />
+
+    <table class="table-bordered" style="margin:auto">
+        <tr>
+            <td width="30">@Html.DisplayNameFor(model => model.Founders[0].Id)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Founders[0].INN)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Founders[0].NameSurname)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Founders[0].AddDate)</td>
+            <td width="200">@Html.DisplayNameFor(model => model.Founders[0].UpdateDate)</td>
+        </tr>
+        @foreach (Founder fn in Model.Founders)
+        {
+            <tr>
+                <td>@fn.Id</td>
+                <td>@fn.INN</td>
+                <td>@fn.NameSurname</td>
+                <td>@fn.AddDate.ToString("[HH:mm] (yyyy.MM.dd)")</td>
+                <td>@fn.UpdateDate.ToString("[HH:mm] (yyyy.MM.dd)")</td>
+                <td> <a class="btn btn-dark" asp-action="@nameof(ClientsController.ChangeFounder)" asp-route-id="@fn.Id">Редактирование</a>  </td>
+            </tr>
+        }
+    </table>
+
+    <br />
+    <div style="display: flex; justify-content: center;">
+        @{
+            if (Model.Page - 1 > 0)
+            {
+                <a class="btn btn-outline-secondary" style="display: inline-block; margin-right: 30px" asp-controller="Clients" 
+                   asp-route-page="@(Model.Page-1)"
+                   asp-route-count="@(Model.Count)"
+                   asp-route-Search.FounderName="@(Model.Search == null ? "" : Model.Search.FounderName)"
+                   asp-route-Search.FounderINN="@(Model.Search == null ? "" : Model.Search.FounderINN)"
+                   asp-action="@nameof(ClientsController.ViewFounders)">Предыдущая страница</a>
+            }
+            if (Model.Page + 1 <= Model.Pages)
+            {
+                <a class="btn btn-outline-secondary" style="display: inline-block; margin-left: 30px" asp-controller="Clients" 
+                   asp-route-page="@(Model.Page + 1)"
+                   asp-route-count="@(Model.Count)"
+                   asp-route-Search.FounderName="@(Model.Search == null ? "" : Model.Search.FounderName)"
+                   asp-route-Search.FounderINN="@(Model.Search == null ? "" : Model.Search.FounderINN)"
+                   asp-action="@nameof(ClientsController.ViewFounders)">Следующая страница</a>
+            }
+        }
+    </div>
+</div>

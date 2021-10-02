@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "База клиентов - Удалить клиента";
+    @using ClientsWebApp.Controllers
+    @model int
+}
+
+<h1>Удалить <strong>Клиента</strong></h1>
+<div>
+    <form style="margin-bottom:50px;" asp-action="@nameof(ClientsController.DeleteClient)">
+        <label class="control-label">Вы действительно хотите удалить этого клиента?</label> <br />
+        <input type="hidden" name="Id" value="@Model" />
+        <input type="submit" class="btn btn-danger" value="Удалить" />
+        <a class="btn btn-dark" style="display:inline-block; margin-left:50px;" asp-route-id="@Model" asp-controller="Clients" asp-action="@nameof(ClientsController.ChangeClient)">Отмена</a>
+    </form>
+</div>
+
