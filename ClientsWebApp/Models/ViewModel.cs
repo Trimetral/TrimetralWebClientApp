@@ -12,6 +12,6 @@ namespace ClientsWebApp.Models
         public int Page { get; set; } = 1;
         public int Pages { get; set; } = 1;
         public int Count { get; set; } = 5;
-        public SelectList CountVars { get; set; } = new SelectList(new List<int> { 5, 10, 15, 20, 50 });
+        public SelectList CountVars { get; set; } = new SelectList(new List<int> { 5, 10, 15, 20, 40, 50 });
     }
 }
