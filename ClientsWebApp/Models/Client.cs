@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClientsWebApp.Models
 {
-    [Index(nameof(INN))]
+    [Index(nameof(INN), IsUnique = true)]
     [Index(nameof(ClientName))]
     public class Client
     {

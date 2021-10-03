@@ -342,8 +342,10 @@ namespace ClientsWebApp.Controllers
             IQueryable<Client> clients = dataContext.Clients;
             if (viewClients != null && viewClients.Search != null)
             {
-                if (viewClients.Search.ClientINN != null) clients = clients.Where(n => n.INN.Contains(viewClients.Search.ClientINN));
-                if (viewClients.Search.ClientName != null) clients = clients.Where(n => n.ClientName.Contains(viewClients.Search.ClientName));
+                if (viewClients.Search.ClientINN != null) 
+                    clients = clients.Where(n => viewClients.Search.ClientINN.Length == 10 ? n.INN == viewClients.Search.ClientINN : n.INN.Contains(viewClients.Search.ClientINN));
+                if (viewClients.Search.ClientName != null) 
+                    clients = clients.Where(n => n.ClientName.Contains(viewClients.Search.ClientName));
                 if (viewClients.Search.ClientType != null)
                 {
                     if (viewClients.Search.ClientType.ToUpper() == "ИП")
@@ -366,8 +368,10 @@ namespace ClientsWebApp.Controllers
             IQueryable<Founder> founders = dataContext.Founders;
             if (viewFounders != null && viewFounders.Search != null)
             {
-                if (viewFounders.Search.FounderINN != null) founders = founders.Where(n => n.INN.Contains(viewFounders.Search.FounderINN));
-                if (viewFounders.Search.FounderName != null) founders = founders.Where(n => n.NameSurname.Contains(viewFounders.Search.FounderName));
+                if (viewFounders.Search.FounderINN != null) 
+                    founders = founders.Where(n => viewFounders.Search.FounderINN.Length == 12 ? n.INN == viewFounders.Search.FounderINN : n.INN.Contains(viewFounders.Search.FounderINN));
+                if (viewFounders.Search.FounderName != null) 
+                    founders = founders.Where(n => n.NameSurname.Contains(viewFounders.Search.FounderName));
             }
             int count = await founders.CountAsync();
             int pages = count / viewFounders.Count;
